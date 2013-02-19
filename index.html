@@ -1,0 +1,54 @@
+
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>测试</title>
+        <style>
+
+        </style>
+        <script src="def.js"></script>
+        <script>
+            var namespace = {}
+            def("Animal")({
+                init: function(name) {
+                    this.name = name;
+                },
+                speak: function(text) {
+                    console.log("this is a " + this.name);
+                }
+            });
+            var animal = new Animal("Animal");
+            alert(animal)
+            def("Dog") << Animal({
+                init: function(name, age) {
+                    this._super();
+                    this.age = age;
+                },
+                run: function(s) {
+                    console.log(s)
+                }
+            });
+
+
+            def("DDog") < Dog({
+            });
+
+            var dog = new DDog("dog", 20);
+            alert(dog.name)
+        </script>
+    </head>
+
+    <body>
+
+        <select id="test-select">
+            <option id="test-opt"  value="1">0</option>
+            <option disabled>2</option>
+            <option disabled>3</option>
+        </select>
+        <a href="aaa">司徒正美</a>
+    </body>
+
+
+</html>
