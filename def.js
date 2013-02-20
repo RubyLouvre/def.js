@@ -1,6 +1,4 @@
 (function(global) {
-
-
     //deferred是整个库最重要的构造，扮演三个角色
     //1 def("Animal")时就是返回deferred,此时我们可以直接接括号对原型进行扩展
     //2 在继承父类时 < 触发两者调用valueOf，此时会执行deferred.valueOf里面的逻辑
@@ -23,21 +21,24 @@
 
         return this;
     }
-
+    // 一个中介者，用于切断子类与父类的原型连接
+    //它会像DVD+R光盘那样被反复擦写
+    function Subclass() {
+    }
     function base() {
         // 取得调用this._super()这个函数本身，如果是在init内，那么就是当前类
-        var caller = arguments.callee.caller;
+        //http://larryzhao.com/blog/arguments-dot-callee-dot-caller-bug-in-internet-explorer-9/
+        var caller = base.caller;
         //执行父类的同名方法，有两种形式，一是用户自己传，二是智能取当前函数的参数
         return caller._class._super.prototype[caller._name]
                 .apply(this, arguments.length ? arguments : caller.arguments);
     }
 
-
     function def(context, klassName) {
         klassName || (klassName = context, context = global);
         //偷偷在给定的全局作用域或某对象上创建一个类
         var Klass = context[klassName] = function Klass() {
-            if (this instanceof Klass) {//如果不使用new 操作符，大多数情况为context与this都为window
+            if (context != this) {//如果不使用new 操作符，大多数情况为context与this都为window
                 return this.init && this.init.apply(this, arguments);
             }
             //实现继承的第二步，让渡自身与扩展包到deferred
@@ -52,9 +53,7 @@
         deferred = function(props) {
             return Klass.extend(props);
         };
-        // 一个中介者，用于切断子类与父类的原型连接
-        function Subclass() {
-        }
+
         // 实现继承的第三步，重写valueOf，方便在def("Dog") < Animal({})执行它
         deferred.valueOf = function() {
 

@@ -10,7 +10,7 @@
         </style>
         <script src="def.js"></script>
         <script>
-            var namespace = {}
+
             def("Animal")({
                 init: function(name) {
                     this.name = name;
@@ -20,33 +20,46 @@
                 }
             });
             var animal = new Animal("Animal");
-            alert(animal)
-            def("Dog") << Animal({
+            console.log(animal.name)
+            def("Dog") < Animal({
                 init: function(name, age) {
-                    this._super();
+                    this._super();//魔术般地调用父类
                     this.age = age;
                 },
                 run: function(s) {
                     console.log(s)
                 }
             });
-
-
-            def("DDog") < Dog({
+            var dog = new Dog("wangwang");
+            console.log(dog.name);//wangwang
+            //在命名空间对象上创建子类
+            var namespace = {}
+            def(namespace, "Shepherd") < Dog({
+                init: function() {
+                    this._super();
+                }
             });
 
-            var dog = new DDog("dog", 20);
-            alert(dog.name)
+            var shepherd = new namespace.Shepherd("Shepherd")
+            console.log(shepherd.name);
+
+            function func1(flag) {
+                if (flag) {
+                    alert("Caller is here!");
+                } else {
+                    func2();
+                }
+            }
+
+            function func2() {
+                arguments.callee.caller(true);
+            }
         </script>
     </head>
 
     <body>
 
-        <select id="test-select">
-            <option id="test-opt"  value="1">0</option>
-            <option disabled>2</option>
-            <option disabled>3</option>
-        </select>
+        <button onclick="func1(false)">Test</button>
         <a href="aaa">司徒正美</a>
     </body>
 
